@@ -1,5 +1,6 @@
 using UnityEngine;
 
+//TODO Pvelapbox einbauen zum auswählen
 public class GroundCheck : MonoBehaviour
 {
     [System.Serializable]
@@ -65,7 +66,7 @@ public class GroundCheck : MonoBehaviour
         for (int i = 0; i < rays.Length; i++)
         {
             Vector2 rayStart = (Vector2)transform.position + rays[i].offset;
-            RaycastHit2D hit = Physics2D.Raycast(rayStart, _direction, rays[i].length, _layerMask);
+            RaycastHit2D hit = Physics2D.Raycast(rayStart, _direction, rays[i].length, _layerMask);           
             if (DebugModus)
             {
                 Debug.DrawRay(rayStart, _direction * rays[i].length,hit.collider!=null ? Color.green : Color.red);

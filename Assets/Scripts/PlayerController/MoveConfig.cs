@@ -6,10 +6,10 @@ public class MoveConfig : ScriptableObject
 
     [SerializeField] float moveSpeed = 1.0f;
     [SerializeField] float maxSpeed = 1.5f;
-    [SerializeField] float acceleration = 10f;
-    [SerializeField] float deceleration = 10f;
+    [SerializeField] float acceleration = 20f;
+    [SerializeField] float deceleration = 20f;
     [SerializeField] float airAcceleration = 8f;
-    [SerializeField] float airDeceleration = 8f;
+    [SerializeField] float airDeceleration = 2f;
     [SerializeField] float airControlFactor = 0.8f;
     [SerializeField] float velocitySmoothing = 0.05f;
     public float MoveSpeed => moveSpeed;

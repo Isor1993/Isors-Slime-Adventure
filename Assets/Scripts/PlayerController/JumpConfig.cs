@@ -3,13 +3,14 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "JumpConfig", menuName = "Scriptable Objects/JumpConfig")]
 public class JumpConfig : ScriptableObject
 {
-    [SerializeField] private float _jumpforce = 1;
+    [SerializeField] private float _jumpforce = 5;
     [SerializeField] private float _gravityScaleUp;
     [SerializeField] private float _gravityScaleDown;
     [SerializeField] private float _jumpCutMultiplier;
     [SerializeField] private float _coyoteTime;
     [SerializeField] private float _jumpBufferTime;
-    [SerializeField] private float _multiJumpCount;
+    [Tooltip("Always -1 because ")]
+    [SerializeField] private float _multiJumpCount=2;
        
 
     public float JumpForce =>_jumpforce;

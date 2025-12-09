@@ -46,17 +46,13 @@ public class PlayerController : MonoBehaviour
     {
         _inputActions.Slime.Disable();
     }
-
-
-    private void Start()
-    {
-
-    }
+        
     private void FixedUpdate()
     {
         bool _oldIsGrounded= _isGrounded;
         bool _oldJumpPressed = _jumpPressed;
         _isGrounded = _groundCheck.CheckGround();
+        _movement.SetGroundedState(_isGrounded);
         if (_isGrounded != _oldIsGrounded)
         {
 
@@ -79,8 +75,8 @@ public class PlayerController : MonoBehaviour
     public void UpdateInput()
     {
         _horizentalInput = _move.ReadValue<float>();
-
         _jumpPressed = _jump.IsPressed();
+       
 
     }
     public void HandleMovement()
@@ -91,9 +87,14 @@ public class PlayerController : MonoBehaviour
 
     public void HandleJump()
     {
-        if (_jumpIsEnabled && _jumpPressed && _isGrounded)
+        if (_jumpIsEnabled && _jumpPressed )
         {
             _jumpBehaviour.Jump();
+            
+        }
+        if (_isGrounded)
+        {
+            _jumpBehaviour._jumpCount = 0;
         }
 
     }
