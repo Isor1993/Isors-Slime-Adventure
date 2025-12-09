@@ -4,19 +4,20 @@ public class JumpBehaviour
 {
     private readonly JumpConfig _config;
     private readonly Rigidbody2D _rb;
-    public int _jumpCount = -1;
-    
-    
+    public int _jumpCount = 0;
     
 
 
-    public JumpBehaviour(JumpConfig config,Rigidbody2D rb)
+
+
+
+    public JumpBehaviour(JumpConfig config, Rigidbody2D rb)
     {
         _config = config;
-        _rb=rb;
+        _rb = rb;
     }
 
-    public void Jump()
+    public void Jump(bool isGrounded)
     {
         if (_jumpCount < _config.MultiJumpCount)
         {
@@ -24,8 +25,11 @@ public class JumpBehaviour
             currentVelocity.y = _config.JumpForce;
             _rb.linearVelocity = currentVelocity;
             _jumpCount++;
-        }
-
+        }     
+    }
+    public void ResetJumpCount()
+    {
+        _jumpCount = 0;
     }
 
 

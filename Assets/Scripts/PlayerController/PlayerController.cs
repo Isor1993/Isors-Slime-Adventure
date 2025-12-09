@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     private float _horizentalInput = 0.0f;
     private bool _jumpPressed = false;
+    private bool _jumpPressedBuffer = false;
     private bool _jumpReleased = true;
     private bool _jumpHeld = false;
     private bool _isGrounded = false;
@@ -24,6 +26,7 @@ public class PlayerController : MonoBehaviour
     private PlayerInputActions _inputActions;
     private InputAction _move;
     private InputAction _jump;
+    public event Action OnJump;
 
 
     private void Awake()
@@ -32,7 +35,7 @@ public class PlayerController : MonoBehaviour
         _move = _inputActions.Slime.Move;
         _jump = _inputActions.Slime.Jump;
         _movement = new MoveBehaviour(_moveConfig, _rb);
-        _jumpBehaviour = new JumpBehaviour(_jumpConfig,_rb);
+        _jumpBehaviour = new JumpBehaviour(_jumpConfig, _rb);
 
 
 
@@ -46,12 +49,16 @@ public class PlayerController : MonoBehaviour
     {
         _inputActions.Slime.Disable();
     }
-        
+
     private void FixedUpdate()
     {
-        bool _oldIsGrounded= _isGrounded;
+        bool _oldIsGrounded = _isGrounded;
         bool _oldJumpPressed = _jumpPressed;
         _isGrounded = _groundCheck.CheckGround();
+        if (!_oldIsGrounded && _isGrounded)
+        {        
+            _jumpBehaviour.ResetJumpCount();
+        }
         _movement.SetGroundedState(_isGrounded);
         if (_isGrounded != _oldIsGrounded)
         {
@@ -64,20 +71,21 @@ public class PlayerController : MonoBehaviour
         }
         HandleMovement();
         HandleJump();
-
+       
     }
 
     private void Update()
     {
         UpdateInput();
-
     }
     public void UpdateInput()
-    {
-        _horizentalInput = _move.ReadValue<float>();
-        _jumpPressed = _jump.IsPressed();
-       
-
+    {        
+        _horizentalInput = _move.ReadValue<float>();       
+        _jumpPressed = _jump.WasPressedThisFrame(); 
+        if (_jumpPressed)
+        {
+            _jumpPressedBuffer = true;
+        }    
     }
     public void HandleMovement()
     {
@@ -87,15 +95,11 @@ public class PlayerController : MonoBehaviour
 
     public void HandleJump()
     {
-        if (_jumpIsEnabled && _jumpPressed )
+        if (_jumpIsEnabled && _jumpPressedBuffer)
         {
-            _jumpBehaviour.Jump();
             
+            _jumpBehaviour.Jump(_isGrounded);
+            _jumpPressedBuffer = false;
         }
-        if (_isGrounded)
-        {
-            _jumpBehaviour._jumpCount = 0;
-        }
-
     }
 }
