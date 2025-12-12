@@ -2,80 +2,45 @@ using UnityEngine;
 
 //TODO Pvelapbox einbauen zum auswählen
 public class GroundCheck : MonoBehaviour
-{
-    [System.Serializable]
-    public struct GroundRay
-    {
-        public Vector2 offset;
-        public float length;       
-    }
-
-    [Header("Input")]
+{  
+    [Header("Settings OverLapbox")]
     [SerializeField] private LayerMask _layerMask;
-
-    [Header("Options Raycast")]
-    [SerializeField] private float _rayLength = 0.2f;
-    [Header("Extra Ray Settings")]
-    [SerializeField] private GroundRay[] rays;
-
-
+    [SerializeField] private Vector2 _boxSize = new Vector2(1f,0.19f);
+    [SerializeField] private Vector2 _boxOffset = new Vector2(0f,0.08f);
     [Header("Debug")]
-    public bool DebugModus = false;
+    [SerializeField] private bool DebugModus = false;
 
-
-    private bool _isGrounded;
-    private Vector2 _direction = Vector2.down;
+    private bool _isGrounded;  
 
 
     private void FixedUpdate()
     {
-        _isGrounded = false;
-        MainRaycast();
-        if (rays.Length > 0 && _isGrounded != true)
-        {
-            OptionalRaycast();
-        }
+        _isGrounded = CheckOverlap();
     }
 
     public bool CheckGround()
     {
-
         return _isGrounded;
     }
 
-    private void MainRaycast()
+    private bool CheckOverlap()
     {
-        Vector2 _rayStart = (Vector2)transform.position;
+        Vector2 boxPosition = (Vector2)transform.position + _boxOffset;
+        Collider2D hit = Physics2D.OverlapBox(boxPosition, _boxSize,0, _layerMask);
 
-        RaycastHit2D hit = Physics2D.Raycast(_rayStart, _direction, _rayLength, _layerMask);
-
-        if (hit.collider != null)
-        {
-            _isGrounded = true;
-        }       
-
-        if (DebugModus)
-        {
-            Debug.DrawRay(_rayStart, _direction * _rayLength, hit.collider!=null ? Color.green : Color.red);
-        }
-
+        return hit!=null;
     }
 
-    private void OptionalRaycast()
+    private void OnDrawGizmos()
     {
-        for (int i = 0; i < rays.Length; i++)
+        if (DebugModus)
         {
-            Vector2 rayStart = (Vector2)transform.position + rays[i].offset;
-            RaycastHit2D hit = Physics2D.Raycast(rayStart, _direction, rays[i].length, _layerMask);           
-            if (DebugModus)
-            {
-                Debug.DrawRay(rayStart, _direction * rays[i].length,hit.collider!=null ? Color.green : Color.red);
-            }
-            if (hit.collider != null)
-            {
-               _isGrounded = true;
-                break;
-            }          
+            Vector3 position=transform.position;
+            position.y += _boxOffset.y;
+            position.x += _boxOffset.x;
+
+            Gizmos.color = Application.isPlaying && _isGrounded ? Color.green : Color.red;
+            Gizmos.DrawWireCube(position, _boxSize);
         }
     }
 }

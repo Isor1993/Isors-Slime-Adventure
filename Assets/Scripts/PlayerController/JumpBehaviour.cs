@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class JumpBehaviour
@@ -5,11 +6,6 @@ public class JumpBehaviour
     private readonly JumpConfig _config;
     private readonly Rigidbody2D _rb;
     public int _jumpCount = 0;
-    
-
-
-
-
 
     public JumpBehaviour(JumpConfig config, Rigidbody2D rb)
     {
@@ -17,20 +13,28 @@ public class JumpBehaviour
         _rb = rb;
     }
 
-    public void Jump(bool isGrounded)
+
+    public bool Jump(bool isGrounded,bool isCoyote)
     {
-        if (_jumpCount < _config.MultiJumpCount)
+        bool canUseGround = isGrounded || isCoyote;
+        bool canDoubleJump = !isGrounded && _jumpCount < _config.MultiJumpCount;
+
+        if (canUseGround || canDoubleJump)
         {
+            if(isGrounded&&isCoyote)
+            {
+                _jumpCount = 0;
+            }
             Vector2 currentVelocity = _rb.linearVelocity;
             currentVelocity.y = _config.JumpForce;
             _rb.linearVelocity = currentVelocity;
             _jumpCount++;
-        }     
-    }
-    public void ResetJumpCount()
-    {
-        _jumpCount = 0;
-    }
 
-
+            return true;
+        }
+        else
+        {
+            return false;
+        }        
+    } 
 }

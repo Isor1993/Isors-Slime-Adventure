@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 12928952}
   - component: {fileID: 12928955}
   - component: {fileID: 12928954}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -668,9 +668,9 @@ MonoBehaviour:
   _layerMask:
     serializedVersion: 2
     m_Bits: 64
-  _rayLength: 0.1
-  rays: []
-  DebugModus: 0
+  _boxSize: {x: 1, y: 0.19}
+  _boxOffset: {x: 0, y: 0.08}
+  DebugModus: 1
 --- !u!4 &773391716
 Transform:
   m_ObjectHideFlags: 0
@@ -784,8 +784,8 @@ GameObject:
   - component: {fileID: 1128038152}
   - component: {fileID: 1128038151}
   - component: {fileID: 1128038149}
-  - component: {fileID: 1128038153}
   - component: {fileID: 1128038154}
+  - component: {fileID: 1128038155}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -809,7 +809,7 @@ Rigidbody2D:
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: a11add9fc6832324da8ca39f02021ec0, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -892,7 +892,24 @@ Transform:
   - {fileID: 773391716}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!70 &1128038153
+--- !u!114 &1128038154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128038148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a3f87a3c0b2d32478bad7a9c906d615, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _moveConfig: {fileID: 11400000, guid: f56921e78a562764892f4a601684ce15, type: 2}
+  _jumpConfig: {fileID: 11400000, guid: a700d84534a6d4b4aabf31a605d3ea17, type: 2}
+  _rb: {fileID: 1128038149}
+  _groundCheck: {fileID: 773391715}
+  _jumpIsEnabled: 1
+--- !u!70 &1128038155
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -902,7 +919,7 @@ CapsuleCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: a11add9fc6832324da8ca39f02021ec0, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -929,23 +946,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 2}
   m_Direction: 0
---- !u!114 &1128038154
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1128038148}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a3f87a3c0b2d32478bad7a9c906d615, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _moveConfig: {fileID: 11400000, guid: f56921e78a562764892f4a601684ce15, type: 2}
-  _jumpConfig: {fileID: 11400000, guid: a700d84534a6d4b4aabf31a605d3ea17, type: 2}
-  _rb: {fileID: 1128038149}
-  _groundCheck: {fileID: 773391715}
-  _jumpIsEnabled: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -7,10 +7,9 @@ public class PlayerController : MonoBehaviour
 {
     private float _horizentalInput = 0.0f;
     private bool _jumpPressed = false;
-    private bool _jumpPressedBuffer = false;
-    private bool _jumpReleased = true;
-    private bool _jumpHeld = false;
     private bool _isGrounded = false;
+    private float _coyoteTimeCounter;
+
 
     [Header("Dependencies")]
     [SerializeField] private MoveConfig _moveConfig;
@@ -26,7 +25,7 @@ public class PlayerController : MonoBehaviour
     private PlayerInputActions _inputActions;
     private InputAction _move;
     private InputAction _jump;
-    public event Action OnJump;
+
 
 
     private void Awake()
@@ -36,15 +35,13 @@ public class PlayerController : MonoBehaviour
         _jump = _inputActions.Slime.Jump;
         _movement = new MoveBehaviour(_moveConfig, _rb);
         _jumpBehaviour = new JumpBehaviour(_jumpConfig, _rb);
-
-
-
     }
 
     private void OnEnable()
     {
         _inputActions.Slime.Enable();
     }
+
     private void OnDisable()
     {
         _inputActions.Slime.Disable();
@@ -52,54 +49,58 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        bool _oldIsGrounded = _isGrounded;
-        bool _oldJumpPressed = _jumpPressed;
         _isGrounded = _groundCheck.CheckGround();
-        if (!_oldIsGrounded && _isGrounded)
-        {        
-            _jumpBehaviour.ResetJumpCount();
-        }
-        _movement.SetGroundedState(_isGrounded);
-        if (_isGrounded != _oldIsGrounded)
-        {
 
-            Debug.Log($"_isGrounded: {_isGrounded}");
-        }
-        if (_jumpPressed != _oldJumpPressed)
+        if (_isGrounded)
         {
-            Debug.Log($"_jumpPressed: {_jumpPressed}");
+            _coyoteTimeCounter = _jumpConfig.CoyoteTime;
+            
         }
+        else
+        {
+            _coyoteTimeCounter-= Time.deltaTime;
+        }
+            _movement.SetGroundedState(_isGrounded);
+
         HandleMovement();
         HandleJump();
-       
     }
 
     private void Update()
     {
         UpdateInput();
+        Debug.Log($"Jump is :[{IsCoyoteTimeActive()}] Counter:[{_coyoteTimeCounter}]");       
+        Debug.Log(_jumpBehaviour._jumpCount);
     }
     public void UpdateInput()
-    {        
-        _horizentalInput = _move.ReadValue<float>();       
-        _jumpPressed = _jump.WasPressedThisFrame(); 
-        if (_jumpPressed)
+    {
+        _horizentalInput = _move.ReadValue<float>();
+        
+
+        if (_jump.WasPressedThisFrame())
         {
-            _jumpPressedBuffer = true;
-        }    
+            _jumpPressed = true;
+        }      
     }
+
     public void HandleMovement()
     {
-        _movement.Move(_horizentalInput);
-        Debug.Log(_rb.linearVelocityX);
+        _movement.Move(_horizentalInput);       
     }
 
     public void HandleJump()
     {
-        if (_jumpIsEnabled && _jumpPressedBuffer)
+        if (_jumpIsEnabled && _jumpPressed)
         {
-            
-            _jumpBehaviour.Jump(_isGrounded);
-            _jumpPressedBuffer = false;
+           
+           
+            bool jumped = _jumpBehaviour.Jump(_isGrounded,IsCoyoteTimeActive());
+            _jumpPressed = false;
         }
+    }
+
+    private bool IsCoyoteTimeActive()
+    {
+        return _coyoteTimeCounter>=0;
     }
 }
